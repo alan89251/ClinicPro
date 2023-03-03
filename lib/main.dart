@@ -1,6 +1,8 @@
 import 'package:clinic_pro/screens/login_screen.dart';
 import 'package:clinic_pro/screens/bottom_bar.dart';
+import 'package:clinic_pro/utils/patient_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +14,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ClinicPro',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ChangeNotifierProvider(
+      create: (_) => PatientProvider(),
+      child: MaterialApp(
+        title: 'ClinicPro',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const LoginScreen(),
       ),
-      home: const LoginScreen(),
     );
   }
 }

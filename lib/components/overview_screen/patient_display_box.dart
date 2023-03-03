@@ -3,8 +3,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../../model/patient.dart';
+
 class PatientDisplayBox extends StatelessWidget {
-  PatientDisplayBox();
+  final Patient patient;
+
+  const PatientDisplayBox({Key? key, required this.patient}) : super(key: key);
+
+  int calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+
+    return age;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +53,11 @@ class PatientDisplayBox extends StatelessWidget {
               Container(
                 height: 60,
                 width: 60,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   image: DecorationImage(
-                    image: AssetImage('assets/dummyAssets/dummyIcon.png'),
+                    image: NetworkImage(patient.photoUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -45,9 +69,9 @@ class PatientDisplayBox extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Serana Gomez", style: Styles.headlineStyle3),
+                    Text("${patient.firstName} ${patient.lastName}", style: Styles.headlineStyle3),
                     Gap(5),
-                    Text("Age: 71", style: Styles.headlineStyle5),
+                    Text("Age: ${calculateAge(patient.dateOfBirth)}", style: Styles.headlineStyle5),
                     Gap(5),
                     Padding(
                       padding: const EdgeInsets.only(right: 50),
@@ -58,10 +82,10 @@ class PatientDisplayBox extends StatelessWidget {
                             children: [
                               Image.asset('assets/icons/security-pass.png'),
                               Gap(5),
-                              Text("#01038465", style: Styles.headlineStyle5)
+                              Text(patient.phoneNumber.toString(), style: Styles.headlineStyle5)
                             ],
                           ),
-                          Text("Male", style: Styles.headlineStyle5),
+                          Text(patient.gender, style: Styles.headlineStyle5),
                         ],
                       ),
                     ),
