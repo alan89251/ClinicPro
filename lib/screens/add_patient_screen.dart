@@ -1,3 +1,8 @@
+import 'dart:math';
+
+import 'package:clinic_pro/model/latestRecord.dart';
+import 'package:clinic_pro/model/patient.dart';
+import 'package:clinic_pro/service/base_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -13,8 +18,100 @@ class AddPatientScreen extends StatefulWidget {
 }
 
 class _AddPatientScreenState extends State<AddPatientScreen> {
+  String _firstName = "";
+  String _lastName = "";
+  String _address = "";
+  int _year = 0;
+  int _month = 0;
+  int _day = 0;
+  int _phone = 0;
+  String _postalCode = "";
+  String _diseases = "";
   int _selectedGenderIndex = 0;
-  bool _switchValue = false;
+  bool _switchDisable = false;
+  bool _switchAllergies = false;
+
+  String generateRandom23DigitNumber() {
+    Random random = Random();
+    String digits = '';
+    for (int i = 0; i < 23; i++) {
+      digits += random.nextInt(10).toString();
+    }
+    return digits;
+  }
+
+  void _updatePatientField(String fieldName, dynamic value) {
+    setState(() {
+      switch (fieldName) {
+        case "firstName":
+          _firstName = value;
+          break;
+        case "lastName":
+          _lastName = value;
+          break;
+        case "year":
+          _year = int.parse(value);
+          break;
+        case "month":
+          _month = int.parse(value);
+          break;
+        case "day":
+          _day = int.parse(value);
+          break;
+        case "address":
+          _address = value;
+          break;
+        case "phone":
+          _phone = int.parse(value);
+          break;
+        case "postalCode":
+          _postalCode = value;
+          break;
+        case "diseases":
+          _diseases = value;
+          break;
+        case "gender":
+          _selectedGenderIndex = value;
+          break;
+        case "disable":
+          _switchDisable = value;
+          break;
+        case "allergies":
+          _switchAllergies = value;
+          break;
+      }
+    });
+  }
+
+  void postNewPatient() async {
+    Patient _tempPatient = Patient(
+        id: generateRandom23DigitNumber(),
+        idCardNumber: 123456789,
+        firstName: _firstName,
+        lastName: _lastName,
+        gender: _selectedGenderIndex == 0 ? "Male" : "Female",
+        bedNumber: "A123",
+        dateOfBirth: DateTime(_year, _month, _day),
+        height: 0,
+        weight: 0,
+        photoUrl: await BaseClient().getPatientImage(_selectedGenderIndex == 0 ? "Male" : "Female"),
+        phoneNumber: _phone,
+        email: "test@gmail.com",
+        address: _address,
+        postalCode: _postalCode,
+        doctor: "Steven",
+        emergencyContact: "Peter Chan",
+        medicalNotes: "medicalNotes",
+        medicalAllergies: _switchAllergies,
+        disabled: _switchDisable,
+        latestRecord: LatestRecord(
+          bloodPressure: '',
+          respiratoryRate: '',
+          bloodOxygenLevel: '',
+          heartbeatRate: '',
+        ));
+    BaseClient().postPatient(_tempPatient);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +126,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
               children: [
                 Text("Add Patient", style: Styles.headlineStyle.copyWith(color: Styles.titleTextColor)),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    postNewPatient();
+                  },
                   child: Image.asset('assets/icons/save.png'),
                 )
               ],
@@ -60,10 +159,13 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           ),
                         ),
                         child: Row(
-                          children: const [
+                          children: [
                             Expanded(
                               child: TextField(
-                                decoration: InputDecoration(
+                                onChanged: (value) {
+                                  _updatePatientField("firstName", value);
+                                },
+                                decoration: const InputDecoration(
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -95,10 +197,13 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           ),
                         ),
                         child: Row(
-                          children: const [
+                          children: [
                             Expanded(
                               child: TextField(
-                                decoration: InputDecoration(
+                                onChanged: (value) {
+                                  _updatePatientField("lastName", value);
+                                },
+                                decoration: const InputDecoration(
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -123,6 +228,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                         children: [
                           Expanded(
                             child: TextField(
+                              onChanged: (value) {
+                                _updatePatientField("year", value);
+                              },
                               decoration: InputDecoration(
                                 hintText: 'YYYY',
                                 border: OutlineInputBorder(
@@ -137,6 +245,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           const Gap(10),
                           Expanded(
                             child: TextField(
+                              onChanged: (value) {
+                                _updatePatientField("month", value);
+                              },
                               decoration: InputDecoration(
                                 hintText: 'MM',
                                 border: OutlineInputBorder(
@@ -151,6 +262,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           const Gap(10),
                           Expanded(
                             child: TextField(
+                              onChanged: (value) {
+                                _updatePatientField("day", value);
+                              },
                               decoration: InputDecoration(
                                 hintText: 'DD',
                                 border: OutlineInputBorder(
@@ -188,10 +302,13 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           ),
                         ),
                         child: Row(
-                          children: const [
+                          children: [
                             Expanded(
                               child: TextField(
-                                decoration: InputDecoration(
+                                onChanged: (value) {
+                                  _updatePatientField("address", value);
+                                },
+                                decoration: const InputDecoration(
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -212,6 +329,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           children: [
                             Text('Phone', style: Styles.headlineStyle4),
                             TextField(
+                              onChanged: (value) {
+                                _updatePatientField("phone", value);
+                              },
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -232,6 +352,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           children: [
                             Text('Postal Code', style: Styles.headlineStyle4),
                             TextField(
+                              onChanged: (value) {
+                                _updatePatientField("postalCode", value);
+                              },
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -269,10 +392,13 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                           ),
                         ),
                         child: Row(
-                          children: const [
+                          children: [
                             Expanded(
                               child: TextField(
-                                decoration: InputDecoration(
+                                onChanged: (value) {
+                                  _updatePatientField("diseases", value);
+                                },
+                                decoration: const InputDecoration(
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -294,9 +420,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                             value: 0,
                             groupValue: _selectedGenderIndex,
                             onChanged: (value) {
-                              setState(() {
-                                _selectedGenderIndex = value!;
-                              });
+                              _updatePatientField("gender", value);
                             },
                           ),
                           Text(
@@ -311,9 +435,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                             value: 1,
                             groupValue: _selectedGenderIndex,
                             onChanged: (value) {
-                              setState(() {
-                                _selectedGenderIndex = value!;
-                              });
+                              _updatePatientField("gender", value);
                             },
                           ),
                           Text('Female', style: Styles.headlineStyle4),
@@ -329,11 +451,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       Text('Disabled?', style: Styles.headlineStyle4),
                       const Spacer(),
                       Switch(
-                        value: _switchValue,
+                        value: _switchDisable,
                         onChanged: (value) {
-                          setState(() {
-                            _switchValue = value;
-                          });
+                          _updatePatientField("disable", value);
                         },
                       ),
                     ],
@@ -346,11 +466,9 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                       Text('Medical Allergies?', style: Styles.headlineStyle4),
                       const Spacer(),
                       Switch(
-                        value: _switchValue,
+                        value: _switchAllergies,
                         onChanged: (value) {
-                          setState(() {
-                            _switchValue = value;
-                          });
+                          _updatePatientField("allergies", value);
                         },
                       ),
                     ],
