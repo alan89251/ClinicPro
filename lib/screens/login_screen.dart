@@ -49,7 +49,7 @@ class LoginScreen extends StatelessWidget {
               const Gap(40),
               InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const BottomBar()));
+                  Navigator.pushNamed(context,'/overview');
                 },
                 child: Container(
                     alignment: Alignment.center,

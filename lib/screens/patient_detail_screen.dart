@@ -238,6 +238,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                               width: 40,
                               child: IconButton(
                                 onPressed: () {
+                                  Navigator.pushNamed(context, '/patientRecords');
                                 },
                                 icon: Image.asset('assets/icons/list-alt.png'),
                               ),
@@ -320,6 +321,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                         borderRadius: BorderRadius.circular(10),
                         child: ElevatedButton(
                           onPressed: () {
+                            Navigator.pop(context);
                           },
                           child: const Text('Save & Back'),
                           style: ElevatedButton.styleFrom(

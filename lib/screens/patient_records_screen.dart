@@ -34,7 +34,9 @@ class _PatientRecordsScreenState extends State<PatientRecordsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     child: Image.asset('assets/icons/back.png'),
                   ),
                   Text("Patient Records", style: Styles.headlineStyle.copyWith(color: Styles.titleTextColor)),

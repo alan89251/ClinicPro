@@ -18,33 +18,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => PatientProvider(),
-      child: MaterialApp(
-        title: 'ClinicPro',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const LoginScreen(),
-      ),
+    return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginScreen(),
-        '/patientDetail': (context) => ChangeNotifierProvider(
-          create: (context) => PatientDetailModel(),
-          child: const PatientDetailScreen()
-        ),
+        '/': (context) => ChangeNotifierProvider(create: (_) => PatientProvider(), child: const LoginScreen()),
+        '/overview' :(context) => ChangeNotifierProvider(create: (_) => PatientProvider(), child: const BottomBar()),
+        '/patientDetail': (context) =>
+            ChangeNotifierProvider(create: (context) => PatientDetailModel(), child: const PatientDetailScreen()),
         '/patientRecords': (context) => MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (context) => PatientDetailModel(),
+              providers: [
+                ChangeNotifierProvider(
+                  create: (context) => PatientDetailModel(),
+                ),
+                ChangeNotifierProvider(
+                  create: (context) => PatientRecordsModel(),
+                ),
+              ],
+              child: const PatientRecordsScreen(),
             ),
-            ChangeNotifierProvider(
-              create: (context) => PatientRecordsModel(),
-            ),
-          ],
-          child: const PatientRecordsScreen(),
-        ),
       },
     );
   }
