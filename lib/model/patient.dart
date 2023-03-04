@@ -4,7 +4,7 @@ import 'package:clinic_pro/model/latestRecord.dart';
 
 class Patient {
   final String id;
-  final String idCardNumber;
+  final int idCardNumber;
   final String firstName;
   final String lastName;
   final String gender;
@@ -50,7 +50,7 @@ class Patient {
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
       id: json['id'] ?? '',
-      idCardNumber: json['idCardNumber'] ?? '',
+      idCardNumber: int.parse(json['idCardNumber'])?? 0,
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
       gender: json['gender'] ?? '',
@@ -70,12 +70,48 @@ class Patient {
       disabled: json['disabled'] ?? false,
       latestRecord: json['latestRecord'] == null
           ? LatestRecord(
-        bloodPressure: '',
-        respiratoryRate: '',
-        bloodOxygenLevel: '',
-        heartbeatRate: '',
-      )
+              bloodPressure: '',
+              respiratoryRate: '',
+              bloodOxygenLevel: '',
+              heartbeatRate: '',
+            )
           : LatestRecord.fromJson(json['latestRecord']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['idCardNumber'] = idCardNumber;
+    data['firstName'] = firstName;
+    data['lastName'] = lastName;
+    data['gender'] = gender;
+    data['bedNumber'] = bedNumber;
+    data['dateOfBirth'] = dateOfBirth.toIso8601String();
+    data['height'] = height;
+    data['weight'] = weight;
+    data['photoUrl'] = photoUrl;
+    data['phoneNumber'] = phoneNumber;
+    data['email'] = email;
+    data['address'] = address;
+    data['postalCode'] = postalCode;
+    data['doctor'] = doctor;
+    data['emergencyContact'] = emergencyContact;
+    data['medicalNotes'] = medicalNotes;
+    data['medicalAllergies'] = medicalAllergies;
+    data['disabled'] = disabled;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'Patient{id: $id, idCardNumber: $idCardNumber, firstName: $firstName, '
+        'lastName: $lastName, gender: $gender, bedNumber: $bedNumber, '
+        'dateOfBirth: $dateOfBirth, height: $height, weight: $weight, '
+        'photoUrl: $photoUrl, phoneNumber: $phoneNumber, email: $email, '
+        'address: $address, postalCode: $postalCode, doctor: $doctor, '
+        'emergencyContact: $emergencyContact, medicalNotes: $medicalNotes, '
+        'medicalAllergies: $medicalAllergies, disabled: $disabled, '
+        'latestRecord: $latestRecord}';
   }
 }

@@ -46,7 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     // Filter by phone number
     if (phoneNumber != null && phoneNumber > 0) {
-      patients = patients.where((patient) => patient.phoneNumber == phoneNumber).toList();
+      patients = patients.where((patient) => patient.phoneNumber.toString().contains(phoneNumber.toString())).toList();
     }
 
     return patients;
@@ -54,8 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PatientProvider>(builder: (context, patientProvider, child)
-    {
+    return Consumer<PatientProvider>(builder: (context, patientProvider, child) {
       return Scaffold(
         body: Column(
           children: [
@@ -187,7 +186,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        patients = filterPatients(patientProvider.patients, _firstNameFilter, _lastNameFilter, _phoneNumberFilter);
+                        patients =
+                            filterPatients(patientProvider.patients, _firstNameFilter, _lastNameFilter, _phoneNumberFilter);
                       });
                     },
                     child: Container(
