@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/app_styles.dart';
+import 'custom_picker.dart';
 
 class EditPatientRecordDialog extends StatefulWidget {
   const EditPatientRecordDialog({super.key});
@@ -43,10 +44,7 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
       content: Wrap(
         alignment: WrapAlignment.center,
         children: [
-          Text(
-            'Blood Oxygen Level',
-            style: Styles.headlineStyle4,
-          ),
+          CustomPicker(options: ["Blood Pressure", "Blood Oxygen Level", "Respiratory Rate", "Heart Beat Rate"]),
           Container(
             width: 200,
             height: 32,
