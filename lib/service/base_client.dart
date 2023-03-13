@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:clinic_pro/model/patient.dart';
 import 'package:http/http.dart' as http;
 
-// const String baseUrl = "https://gp5.onrender.com";
-const String baseUrl = "http://10.0.2.2:9001";
+const String baseUrl = "https://gp5.onrender.com";
+// const String baseUrl = "http://10.0.2.2:9001";
 
 class BaseClient {
   //GET request

@@ -35,6 +35,9 @@ class PatientDisplayBox extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
       child: GestureDetector(
+        onTap: (){
+          Navigator.pushNamed(context, '/patientDetail');
+        },
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: const BoxDecoration(
