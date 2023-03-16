@@ -17,6 +17,14 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
     super.dispose();
   }
 
+  int selectedIndex = 0;
+
+  void onIndexChanged(int newIndex) {
+    setState(() {
+      selectedIndex = newIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -30,24 +38,26 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
       contentPadding: const EdgeInsets.all(16.0),
       title: Align(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Add Record", style: Styles.headlineStyle.copyWith(color: Styles.titleTextColor)),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Image.asset('assets/icons/window-close.png'),
-              )
-            ],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("Add Record", style: Styles.headlineStyle.copyWith(color: Styles.titleTextColor)),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Image.asset('assets/icons/window-close.png'),
           )
-      ),
+        ],
+      )),
       content: Wrap(
         alignment: WrapAlignment.center,
         children: [
           Column(
             children: [
-              CustomPicker(options: ["Blood Pressure", "Blood Oxygen Level", "Respiratory Rate", "Heart Beat Rate"]),
+              CustomPicker(
+                options: ["Blood Pressure", "Blood Oxygen Level", "Respiratory Rate", "Heart Beat Rate"],
+                onIndexChanged: onIndexChanged,
+              ),
               Gap(16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -64,14 +74,12 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              width: 1,
-                            )
-                        ),
+                          width: 1,
+                        )),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              width: 1,
-                            )
-                        ),
+                          width: 1,
+                        )),
                         filled: true,
                         fillColor: Colors.white,
                       ),
@@ -85,14 +93,12 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              width: 1,
-                            )
-                        ),
+                          width: 1,
+                        )),
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              width: 1,
-                            )
-                        ),
+                          width: 1,
+                        )),
                         filled: true,
                         fillColor: Colors.white,
                       ),
@@ -109,12 +115,9 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                       child: const Text('Submit'),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Styles.primaryGreenColor
-                      ),
+                      style: ElevatedButton.styleFrom(backgroundColor: Styles.primaryGreenColor),
                     ),
                   ),
                 ),
