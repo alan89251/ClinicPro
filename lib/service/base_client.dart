@@ -4,8 +4,10 @@ import 'dart:math';
 import 'package:clinic_pro/model/patient.dart';
 import 'package:http/http.dart' as http;
 
-const String baseUrl = "https://gp5.onrender.com";
-// const String baseUrl = "http://10.0.2.2:9001";
+import '../model/patient_test.dart';
+
+//const String baseUrl = "https://gp5.onrender.com";
+ const String baseUrl = "http://10.0.2.2:9001";
 
 class BaseClient {
   //GET request
@@ -66,7 +68,21 @@ class BaseClient {
   }
 
 
+  Future<String?> fetchPatientTestReadingById(String patientId ,String testId) async {
+    final response = await http.get(Uri.parse('$baseUrl/patients/$patientId/tests/$testId'));
 
-
-
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      if (jsonResponse['data'] != null) {
+        PatientTest patientTest = PatientTest.fromJson(jsonResponse['data']);
+        return patientTest.readings;
+      } else {
+        throw Exception('Data field is null in the response');
+      }
+    } else {
+      // If the server returns an error response, throw an exception.
+      throw Exception('Failed to load patient test');
+    }
+  }
 }

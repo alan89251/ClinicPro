@@ -5,14 +5,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomPicker extends StatefulWidget {
-  const CustomPicker({Key? key, required this.options}) : super(key: key);
+  const CustomPicker({Key? key, required this.options, required this.onIndexChanged}) : super(key: key);
   final List<String> options;
+  final ValueChanged<int> onIndexChanged;
 
   @override
-  State<CustomPicker> createState() => _CustomPickerState();
+  CustomPickerState createState() => CustomPickerState();
 }
 
-class _CustomPickerState extends State<CustomPicker> {
+class CustomPickerState extends State<CustomPicker> {
   int currentIndex = 0;
 
   @override
@@ -36,6 +37,7 @@ class _CustomPickerState extends State<CustomPicker> {
                   setState(() {
                     currentIndex = max(0, currentIndex - 1);
                   });
+                  widget.onIndexChanged(currentIndex);
                 },
               ),
               Text(
@@ -50,6 +52,7 @@ class _CustomPickerState extends State<CustomPicker> {
                   setState(() {
                     currentIndex = min(widget.options.length - 1, currentIndex + 1);
                   });
+                  widget.onIndexChanged(currentIndex);
                 },
               ),
             ],
