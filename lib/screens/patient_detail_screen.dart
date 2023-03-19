@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../components/gret_divider.dart';
 import '../components/modal/patient_detail_model.dart';
 import '../utils/app_styles.dart';
+import '../model/patient.dart';
 
 class PatientDetailScreen extends StatefulWidget {
   const PatientDetailScreen({super.key});
@@ -23,9 +24,13 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final patient = ModalRoute.of(context)!.settings.arguments as Patient;
+
     return Scaffold(
       body: Consumer<PatientDetailModel>(
         builder: (context, patientDetailModel, child) {
+          patientDetailModel.setPatientWithoutNotifyChange(patient);
+
           return Column(
             children: [
               Container(
@@ -105,13 +110,15 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                         ),
                         Container(
                           margin: const EdgeInsets.fromLTRB(24.0, 0.0, 0.0, 0.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(24.0),
-                            child: Image.asset(
-                              'assets/dummyAssets/dummyIcon.png',
-                              height: 96,
-                              width: 96,
-                            )
+                          height: 96,
+                          width: 96,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                            image: DecorationImage(
+                              image: NetworkImage(patientDetailModel.photoUrl),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         )
                       ],

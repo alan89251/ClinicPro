@@ -1,31 +1,31 @@
 class PatientRecord {
-  int _systolic = 0;
-  int get systolic => _systolic;
-  set systolic(int value) {
+  String _systolic = "";
+  String get systolic => _systolic;
+  set systolic(String value) {
     _systolic = value;
   }
 
-  int _diastolic = 0;
-  int get diastolic => _diastolic;
-  set diastolic(int value) {
+  String _diastolic = "";
+  String get diastolic => _diastolic;
+  set diastolic(String value) {
     _diastolic = value;
   }
 
-  int _bloodOxygenLevel = 0;
-  int get bloodOxygenLevel => _bloodOxygenLevel;
-  set bloodOxygenLevel(int value) {
+  String _bloodOxygenLevel = "";
+  String get bloodOxygenLevel => _bloodOxygenLevel;
+  set bloodOxygenLevel(String value) {
     _bloodOxygenLevel = value;
   }
 
-  int _respiratoryRate = 0;
-  int get respiratoryRate => _respiratoryRate;
-  set respiratoryRate(int value) {
+  String _respiratoryRate = "";
+  String get respiratoryRate => _respiratoryRate;
+  set respiratoryRate(String value) {
     _respiratoryRate = value;
   }
 
-  int _heartBeatRate = 0;
-  int get heartBeatRate => _heartBeatRate;
-  set heartBeatRate(int value) {
+  String _heartBeatRate = "";
+  String get heartBeatRate => _heartBeatRate;
+  set heartBeatRate(String value) {
     _heartBeatRate = value;
   }
 

@@ -1,5 +1,6 @@
 import 'package:clinic_pro/components/modal/patient_record.dart';
 import 'package:flutter/material.dart';
+import '../../model/patient.dart';
 
 class PatientDetailModel extends ChangeNotifier {
   String _name = "";
@@ -79,10 +80,17 @@ class PatientDetailModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //PatientDetailModel();
+  String _photoUrl = "";
+  String get photoUrl => _photoUrl;
+  set photoUrl(String value) {
+    _photoUrl = value;
+    notifyListeners();
+  }
+
+  PatientDetailModel();
 
   // For test
-  PatientDetailModel() {
+  /*PatientDetailModel() {
     name = "Serana Gomez";
     birth = "10/04/1956";
     bloodType = "O";
@@ -98,5 +106,24 @@ class PatientDetailModel extends ChangeNotifier {
     address = "941 Progress Ave, Scarborough";
     postalCode = "M2T39V";
     phone = "647-447-5578";
+  }*/
+
+  void setPatientWithoutNotifyChange(Patient patient) {
+    _name = "${patient.firstName} ${patient.lastName}";
+    _birth = "${patient.dateOfBirth.month}/${patient.dateOfBirth.day}/${patient.dateOfBirth.year}";
+    _bloodType = "O";
+    _doctor = patient.doctor;
+    _healthIssues = patient.medicalNotes;
+    _medications = "Paracetamol 500mg";
+    _precaution = "Low-sodium diet";
+    _patientRecord.diastolic = patient.latestRecord.bloodPressure;
+    _patientRecord.systolic = patient.latestRecord.bloodPressure;
+    _patientRecord.respiratoryRate = patient.latestRecord.respiratoryRate;
+    _patientRecord.heartBeatRate = patient.latestRecord.respiratoryRate;
+    _patientRecord.clinicalDataLastUpdatedTime = "2022/10/04 19:52";
+    _address = patient.address;
+    _postalCode = patient.postalCode;
+    _phone = patient.phoneNumber.toString();
+    _photoUrl = patient.photoUrl;
   }
 }
