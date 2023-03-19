@@ -17,13 +17,6 @@ class PatientDetailModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _bloodType = "";
-  String get bloodType => _bloodType;
-  set bloodType(String value) {
-    _bloodType = value;
-    notifyListeners();
-  }
-
   String _doctor = "";
   String get doctor => _doctor;
   set doctor(String value) {
@@ -35,20 +28,6 @@ class PatientDetailModel extends ChangeNotifier {
   String get healthIssues => _healthIssues;
   set healthIssues(String value) {
     _healthIssues = value;
-    notifyListeners();
-  }
-
-  String _medications = "";
-  String get medications => _medications;
-  set medications(String value) {
-    _medications = value;
-    notifyListeners();
-  }
-
-  String _precaution = "";
-  String get precaution => _precaution;
-  set precaution(String value) {
-    _precaution = value;
     notifyListeners();
   }
 
@@ -111,16 +90,12 @@ class PatientDetailModel extends ChangeNotifier {
   void setPatientWithoutNotifyChange(Patient patient) {
     _name = "${patient.firstName} ${patient.lastName}";
     _birth = "${patient.dateOfBirth.month}/${patient.dateOfBirth.day}/${patient.dateOfBirth.year}";
-    _bloodType = "O";
     _doctor = patient.doctor;
     _healthIssues = patient.medicalNotes;
-    _medications = "Paracetamol 500mg";
-    _precaution = "Low-sodium diet";
     _patientRecord.bloodPressure = patient.latestRecord.bloodPressure;
     _patientRecord.respiratoryRate = patient.latestRecord.respiratoryRate;
     _patientRecord.bloodOxygenLevel = patient.latestRecord.bloodOxygenLevel;
     _patientRecord.heartBeatRate = patient.latestRecord.heartbeatRate;
-    _patientRecord.clinicalDataLastUpdatedTime = "2022/10/04 19:52";
     _address = patient.address;
     _postalCode = patient.postalCode;
     _phone = patient.phoneNumber.toString();

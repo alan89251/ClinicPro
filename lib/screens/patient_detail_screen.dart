@@ -116,13 +116,6 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                     Container(
                                       margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
                                       child: Text(
-                                        'Blood Type: ${patientDetailModel.bloodType}',
-                                        style: Styles.headlineStyle4,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                                      child: Text(
                                         'Doctor: ${patientDetailModel.doctor}',
                                         style: Styles.headlineStyle4,
                                       ),
@@ -192,20 +185,6 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                     style: Styles.headlineStyle4,
                                   ),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                                  child: Text(
-                                    'Medications: ${patientDetailModel.medications}',
-                                    style: Styles.headlineStyle4,
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                                  child: Text(
-                                    'Precaution: ${patientDetailModel.precaution}',
-                                    style: Styles.headlineStyle4,
-                                  ),
-                                ),
                               ],
                             ),
                             trailing: SizedBox(
@@ -268,13 +247,6 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                                   child: Text(
                                     'Heart Beat Rate: ${patientDetailModel.patientRecord.heartBeatRate}',
-                                    style: Styles.headlineStyle4,
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                                  child: Text(
-                                    'Last updated time: ${patientDetailModel.patientRecord.clinicalDataLastUpdatedTime}',
                                     style: Styles.headlineStyle4,
                                   ),
                                 ),

@@ -94,13 +94,6 @@ class _PatientRecordsScreenState extends State<PatientRecordsScreen> {
                                         Container(
                                           margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
                                           child: Text(
-                                            'Blood Type: ${patientDetailModel.bloodType}',
-                                            style: Styles.headlineStyle4,
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                                          child: Text(
                                             'Doctor: ${patientDetailModel.doctor}',
                                             style: Styles.headlineStyle4,
                                           ),
