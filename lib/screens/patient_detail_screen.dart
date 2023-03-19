@@ -63,13 +63,13 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
         builder: (context, patientDetailModel, child) {
           this.patientDetailModel = patientDetailModel;
           if (isInit) {
+            isInit = false;
             this.patientDetailModel.setPatientWithoutNotifyChange(patient);
             getBloodPressure(patient);
             getRespiratoryRate(patient);
             getBloodOxygenLevel(patient);
             getHeartbeatRate(patient);
           }
-          isInit = false;
 
           return Column(
             children: [
