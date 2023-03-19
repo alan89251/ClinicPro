@@ -116,14 +116,35 @@ class PatientDetailModel extends ChangeNotifier {
     _healthIssues = patient.medicalNotes;
     _medications = "Paracetamol 500mg";
     _precaution = "Low-sodium diet";
-    _patientRecord.diastolic = patient.latestRecord.bloodPressure;
-    _patientRecord.systolic = patient.latestRecord.bloodPressure;
+    _patientRecord.bloodPressure = patient.latestRecord.bloodPressure;
     _patientRecord.respiratoryRate = patient.latestRecord.respiratoryRate;
-    _patientRecord.heartBeatRate = patient.latestRecord.respiratoryRate;
+    _patientRecord.bloodOxygenLevel = patient.latestRecord.bloodOxygenLevel;
+    _patientRecord.heartBeatRate = patient.latestRecord.heartbeatRate;
     _patientRecord.clinicalDataLastUpdatedTime = "2022/10/04 19:52";
     _address = patient.address;
     _postalCode = patient.postalCode;
     _phone = patient.phoneNumber.toString();
     _photoUrl = patient.photoUrl;
+  }
+
+  void setBloodPressure(String bloodPressure) {
+    _patientRecord.diastolic = bloodPressure!.split(',')[0];
+    _patientRecord.systolic = bloodPressure!.split(',')[1];
+    notifyListeners();
+  }
+
+  void setRespiratoryRate(String respiratoryRate) {
+    _patientRecord.respiratoryRate = respiratoryRate;
+    notifyListeners();
+  }
+
+  void setBloodOxygenLevel(String bloodOxygenLevel) {
+    _patientRecord.bloodOxygenLevel = bloodOxygenLevel;
+    notifyListeners();
+  }
+
+  void setHeartBeatRate(String heartBeatRate) {
+    _patientRecord.heartBeatRate = heartBeatRate;
+    notifyListeners();
   }
 }
