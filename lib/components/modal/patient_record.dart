@@ -11,12 +11,6 @@ class PatientRecord {
     _diastolic = value;
   }
 
-  String _bloodPressure = "";
-  String get bloodPressure => _bloodPressure;
-  set bloodPressure(String value) {
-    _bloodPressure = value;
-  }
-
   String _bloodOxygenLevel = "";
   String get bloodOxygenLevel => _bloodOxygenLevel;
   set bloodOxygenLevel(String value) {

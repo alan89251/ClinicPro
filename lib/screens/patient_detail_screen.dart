@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../components/gret_divider.dart';
 import '../components/modal/patient_detail_model.dart';
-import '../service/base_client.dart';
 import '../utils/app_styles.dart';
 import '../model/patient.dart';
 
@@ -18,59 +17,23 @@ class PatientDetailScreen extends StatefulWidget {
 }
 
 class _PatientDetailScreenState extends State<PatientDetailScreen> {
-  bool isInit = true;
-  PatientDetailModel patientDetailModel = PatientDetailModel();
-
   @override
   void dispose() {
     super.dispose();
   }
 
-  void getBloodPressure(Patient patient) async {
-    if (patient.latestRecord.bloodPressure != "") {
-      String? bloodPressure = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.bloodPressure);
-      patientDetailModel.setBloodPressure(bloodPressure!);
-    }
-  }
-
-  void getRespiratoryRate(Patient patient) async {
-    if (patient.latestRecord.respiratoryRate != "") {
-      String? respiratoryRate = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.respiratoryRate);
-      patientDetailModel.setRespiratoryRate(respiratoryRate!);
-    }
-  }
-
-  void getBloodOxygenLevel(Patient patient) async {
-    if (patient.latestRecord.bloodOxygenLevel != "") {
-      String? bloodOxygenLevel = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.bloodOxygenLevel);
-      patientDetailModel.setBloodOxygenLevel(bloodOxygenLevel!);
-    }
-  }
-
-  void getHeartbeatRate(Patient patient) async {
-    if (patient.latestRecord.heartbeatRate != "") {
-      String? heartbeatRate = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.heartbeatRate);
-      patientDetailModel.setHeartBeatRate(heartbeatRate!);
-    }
+  @override
+  void didChangeDependencies() {
+    Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    patientDetailModel.init(patient);
   }
 
   @override
   Widget build(BuildContext context) {
-    Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
-
     return Scaffold(
       body: Consumer<PatientDetailModel>(
         builder: (context, patientDetailModel, child) {
-          this.patientDetailModel = patientDetailModel;
-          if (isInit) {
-            isInit = false;
-            this.patientDetailModel.setPatientWithoutNotifyChange(patient);
-            getBloodPressure(patient);
-            getRespiratoryRate(patient);
-            getBloodOxygenLevel(patient);
-            getHeartbeatRate(patient);
-          }
-
           return Column(
             children: [
               Container(
@@ -148,10 +111,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                           decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-                            image: DecorationImage(
-                              image: NetworkImage(patientDetailModel.photoUrl),
-                              fit: BoxFit.cover,
-                            ),
+                            image: patientDetailModel.getImageWidget(),
                           ),
                         )
                       ],

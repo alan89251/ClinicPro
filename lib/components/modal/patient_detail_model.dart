@@ -1,8 +1,16 @@
 import 'package:clinic_pro/components/modal/patient_record.dart';
 import 'package:flutter/material.dart';
 import '../../model/patient.dart';
+import '../../service/base_client.dart';
 
 class PatientDetailModel extends ChangeNotifier {
+  String _id = "";
+  String get id => _id;
+  set id(String value) {
+    _id = value;
+    notifyListeners();
+  }
+
   String _name = "";
   String get name => _name;
   set name(String value) {
@@ -59,67 +67,56 @@ class PatientDetailModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _photoUrl = "";
-  String get photoUrl => _photoUrl;
-  set photoUrl(String value) {
+  String? _photoUrl;
+  String? get photoUrl => _photoUrl;
+  set photoUrl(String? value) {
     _photoUrl = value;
     notifyListeners();
   }
 
   PatientDetailModel();
 
-  // For test
-  /*PatientDetailModel() {
-    name = "Serana Gomez";
-    birth = "10/04/1956";
-    bloodType = "O";
-    doctor = "Dr. Max Foster";
-    healthIssues = "Headache";
-    medications = "Paracetamol 500mg";
-    precaution = "Low-sodium diet";
-    patientRecord.diastolic = 150;
-    patientRecord.systolic = 100;
-    patientRecord.respiratoryRate = 120;
-    patientRecord.heartBeatRate = 90;
-    patientRecord.clinicalDataLastUpdatedTime = "2022/10/04 19:52";
-    address = "941 Progress Ave, Scarborough";
-    postalCode = "M2T39V";
-    phone = "647-447-5578";
-  }*/
-
-  void setPatientWithoutNotifyChange(Patient patient) {
+  void init(Patient patient) async {
+    _id = patient.id;
     _name = "${patient.firstName} ${patient.lastName}";
     _birth = "${patient.dateOfBirth.month}/${patient.dateOfBirth.day}/${patient.dateOfBirth.year}";
     _doctor = patient.doctor;
     _healthIssues = patient.medicalNotes;
-    _patientRecord.bloodPressure = patient.latestRecord.bloodPressure;
-    _patientRecord.respiratoryRate = patient.latestRecord.respiratoryRate;
+    if (patient.latestRecord.bloodPressure != "") {
+      String? bloodPressure = await BaseClient().fetchPatientTestReadingById(_id, patient.latestRecord.bloodPressure);
+      _patientRecord.diastolic = bloodPressure!.split(',')[0];
+      _patientRecord.systolic = bloodPressure!.split(',')[1];
+    }
+    if (patient.latestRecord.respiratoryRate != "") {
+      String? respiratoryRate = await BaseClient().fetchPatientTestReadingById(_id, patient.latestRecord.respiratoryRate);
+      _patientRecord.respiratoryRate = respiratoryRate!;
+    }
     _patientRecord.bloodOxygenLevel = patient.latestRecord.bloodOxygenLevel;
+    if (patient.latestRecord.bloodOxygenLevel != "") {
+      String? bloodOxygenLevel = await BaseClient().fetchPatientTestReadingById(_id, patient.latestRecord.bloodOxygenLevel);
+      _patientRecord.bloodOxygenLevel = bloodOxygenLevel!;
+    }
     _patientRecord.heartBeatRate = patient.latestRecord.heartbeatRate;
+    if (patient.latestRecord.heartbeatRate != "") {
+      String? heartbeatRate = await BaseClient().fetchPatientTestReadingById(_id, patient.latestRecord.heartbeatRate);
+      _patientRecord.heartBeatRate = heartbeatRate!;
+    }
     _address = patient.address;
     _postalCode = patient.postalCode;
     _phone = patient.phoneNumber.toString();
     _photoUrl = patient.photoUrl;
-  }
-
-  void setBloodPressure(String bloodPressure) {
-    _patientRecord.diastolic = bloodPressure!.split(',')[0];
-    _patientRecord.systolic = bloodPressure!.split(',')[1];
     notifyListeners();
   }
 
-  void setRespiratoryRate(String respiratoryRate) {
-    _patientRecord.respiratoryRate = respiratoryRate;
-    notifyListeners();
-  }
-
-  void setBloodOxygenLevel(String bloodOxygenLevel) {
-    _patientRecord.bloodOxygenLevel = bloodOxygenLevel;
-    notifyListeners();
-  }
-
-  void setHeartBeatRate(String heartBeatRate) {
-    _patientRecord.heartBeatRate = heartBeatRate;
-    notifyListeners();
+  DecorationImage? getImageWidget() {
+    if (_photoUrl != null) {
+      return DecorationImage(
+        image: NetworkImage(photoUrl!),
+        fit: BoxFit.cover
+      );
+    }
+    else {
+      return null;
+    }
   }
 }
