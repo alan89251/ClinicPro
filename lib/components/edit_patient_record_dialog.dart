@@ -15,8 +15,8 @@ class EditPatientRecordDialog extends StatefulWidget {
 }
 
 class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
-  final reading1Controller = TextEditingController();
-  final reading2Controller = TextEditingController();
+  final _reading1Controller = TextEditingController();
+  final _reading2Controller = TextEditingController();
 
   @override
   void dispose() {
@@ -24,23 +24,24 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
   }
 
   Future<void> updateTest() async {
-    if (reading1Controller.text.isEmpty) {
+    final patientRecordModel = Provider.of<PatientRecordModel>(context, listen: false);
+    if (_reading1Controller.text.isEmpty) {
       return;
     }
-    final patientRecordModel = Provider.of<PatientRecordModel>(context, listen: false);
+    if (patientRecordModel.patientTest.category == "BLOOD_PRESSURE"
+      && _reading2Controller.text.isEmpty) {
+      return;
+    }
+
     if (patientRecordModel.patientTest.category == "BLOOD_PRESSURE") {
-      if (reading2Controller.text.isEmpty) {
-        return;
-      }
-      patientRecordModel.readings = "${reading1Controller.text},${reading2Controller.text}";
+      patientRecordModel.readings = "${_reading1Controller.text},${_reading2Controller.text}";
     }
     else {
-      patientRecordModel.readings = reading1Controller.text;
+      patientRecordModel.readings = _reading1Controller.text;
     }
     patientRecordModel.modifyDate = DateTime.now();
 
-    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
-    await BaseClient().patchTest(patientDetailModel.id, patientRecordModel.patientTest);
+    await BaseClient().patchTest(patientRecordModel.patientTest);
 
     final patientRecordsModel = Provider.of<PatientRecordsModel>(context, listen: false);
     patientRecordsModel.notifyListeners();
@@ -114,7 +115,7 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
         height: 32,
         margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
         child: TextField(
-          controller: reading1Controller,
+          controller: _reading1Controller,
           decoration: const InputDecoration(
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -139,7 +140,7 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
             height: 32,
             margin: const EdgeInsets.fromLTRB(0.0, 16.0, 20.0, 0.0),
             child:TextField(
-              controller: reading1Controller,
+              controller: _reading1Controller,
               decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
@@ -159,7 +160,7 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
             height: 32,
             margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
             child:TextField(
-              controller: reading2Controller,
+              controller: _reading2Controller,
               decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(

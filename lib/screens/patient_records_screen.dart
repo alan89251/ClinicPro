@@ -41,135 +41,154 @@ class _PatientRecordsScreenState extends State<PatientRecordsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
-            child: Align(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Consumer<PatientDetailModel>(
+        builder: (context, patientDetailModel, child) {
+          return Consumer<PatientRecordsModel>(
+            builder: (context, patientRecordsModel, child) {
+              return Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset('assets/icons/back.png'),
+                  Container(
+                    padding: const EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
+                    child: Align(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Image.asset('assets/icons/back.png'),
+                            ),
+                            Text("Patient Records", style: Styles.headlineStyle.copyWith(color: Styles.titleTextColor)),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return MultiProvider(
+                                        providers: [
+                                          ListenableProvider(
+                                            create: (context) => patientDetailModel,
+                                          ),
+                                          ListenableProvider(
+                                            create: (context) => patientRecordsModel,
+                                          ),
+                                        ],
+                                        child: const AddPatientRecordDialog(),
+                                      );
+                                    }
+                                );
+                              },
+                              child: Image.asset('assets/icons/plus_pRecord.png'),
+                            )
+                          ],
+                        )
+                    ),
                   ),
-                  Text("Patient Records", style: Styles.headlineStyle.copyWith(color: Styles.titleTextColor)),
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AddPatientRecordDialog();
-                        }
-                      );
-                    },
-                    child: Image.asset('assets/icons/plus_pRecord.png'),
-                  )
-                ],
-              )
-            ),
-          ),
-          const GreyDivider(),
-          Consumer<PatientDetailModel>(
-            builder: (context, patientDetailModel, child) {
-              return Expanded(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  const GreyDivider(),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+                      child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(24),
-                            child: SizedBox(
-                              height: 96,
-                              width: 240,
-                              child: Card(
-                                  child: ListTile(
-                                    subtitle: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                                          child: Text(
-                                            'Name: ${patientDetailModel.name}',
-                                            style: Styles.headlineStyle4,
-                                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(24),
+                                child: SizedBox(
+                                  height: 96,
+                                  width: 240,
+                                  child: Card(
+                                      child: ListTile(
+                                        subtitle: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
+                                              child: Text(
+                                                'Name: ${patientDetailModel.name}',
+                                                style: Styles.headlineStyle4,
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
+                                              child: Text(
+                                                'Birth: ${patientDetailModel.birth}',
+                                                style: Styles.headlineStyle4,
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
+                                              child: Text(
+                                                'Doctor: ${patientDetailModel.doctor}',
+                                                style: Styles.headlineStyle4,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Container(
-                                          margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                                          child: Text(
-                                            'Birth: ${patientDetailModel.birth}',
-                                            style: Styles.headlineStyle4,
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
-                                          child: Text(
-                                            'Doctor: ${patientDetailModel.doctor}',
-                                            style: Styles.headlineStyle4,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                      )
+                                  ),
+                                ),
                               ),
-                            ),
+                              Container(
+                                margin: const EdgeInsets.fromLTRB(24.0, 0.0, 0.0, 0.0),
+                                height: 96,
+                                width: 96,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                                  image: patientDetailModel.getImageWidget(),
+                                ),
+                              )
+                            ],
                           ),
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(24.0, 0.0, 0.0, 0.0),
-                            height: 96,
-                            width: 96,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-                              image: patientDetailModel.getImageWidget(),
-                            ),
-                          )
+                          Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                                child: ListView(
+                                  children: _getPatientRecordListTiles(patientRecordsModel),
+                                ),
+                              )
+                          ),
                         ],
                       ),
-                      Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
-                            child: Consumer<PatientRecordsModel>(
-                                builder: (context, patientRecordsModel, child) {
-                                  return ListView(
-                                    children: patientRecordsModel
-                                        .patientTests
-                                        .map(
-                                            (patientRecordModel) => _PatientRecordsListTile(
-                                            context,
-                                            patientRecordModel,
-                                            patientRecordsModel,
-                                            patientDetailModel
-                                        )
-                                    ).toList(),
-                                  );
-                                }
-                            ),
-                          )
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               );
             }
-          ),
-        ],
+          );
+        }
       ),
     );
+  }
+
+  List<Widget> _getPatientRecordListTiles(PatientRecordsModel patientRecordsModel) {
+    patientRecordsModel
+      .patientTests
+        .sort(
+            (a, b) => b.patientTest.modifyDate.compareTo(a.patientTest.modifyDate)
+        );
+
+    return patientRecordsModel
+        .patientTests
+        .map(
+          (patientRecordModel) => _PatientRecordsListTile(
+            context,
+            patientRecordModel,
+            patientRecordsModel
+          )
+        )
+        .toList();
   }
 }
 
 ClipRRect _PatientRecordsListTile(
     BuildContext context,
     PatientRecordModel patientRecordModel,
-    PatientRecordsModel patientRecordsModel,
-    PatientDetailModel patientDetailModel,
+    PatientRecordsModel patientRecordsModel
     ) {
   return ClipRRect(
     borderRadius: BorderRadius.circular(30),
@@ -230,9 +249,6 @@ ClipRRect _PatientRecordsListTile(
                           ),
                           ListenableProvider(
                             create: (context) => patientRecordsModel,
-                          ),
-                          ListenableProvider(
-                            create: (context) => patientDetailModel,
                           ),
                         ],
                         child: const EditPatientRecordDialog(),
