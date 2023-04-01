@@ -1,7 +1,11 @@
+import 'package:clinic_pro/components/modal/patient_detail_model.dart';
+import 'package:clinic_pro/components/modal/patient_record_model.dart';
+import 'package:clinic_pro/service/base_client.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/app_styles.dart';
-import 'custom_picker.dart';
+import 'modal/patient_records_model.dart';
 
 class EditPatientRecordDialog extends StatefulWidget {
   const EditPatientRecordDialog({super.key});
@@ -11,17 +15,35 @@ class EditPatientRecordDialog extends StatefulWidget {
 }
 
 class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
+  final reading1Controller = TextEditingController();
+  final reading2Controller = TextEditingController();
+
   @override
   void dispose() {
     super.dispose();
   }
 
-  int selectedIndex = 0;
+  Future<void> updateTest() async {
+    if (reading1Controller.text.isEmpty) {
+      return;
+    }
+    final patientRecordModel = Provider.of<PatientRecordModel>(context, listen: false);
+    if (patientRecordModel.patientTest.category == "BLOOD_PRESSURE") {
+      if (reading2Controller.text.isEmpty) {
+        return;
+      }
+      patientRecordModel.readings = "${reading1Controller.text},${reading2Controller.text}";
+    }
+    else {
+      patientRecordModel.readings = reading1Controller.text;
+    }
+    patientRecordModel.modifyDate = DateTime.now();
 
-  void onIndexChanged(int newIndex) {
-    setState(() {
-      selectedIndex = newIndex;
-    });
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    await BaseClient().patchTest(patientDetailModel.id, patientRecordModel.patientTest);
+
+    final patientRecordsModel = Provider.of<PatientRecordsModel>(context, listen: false);
+    patientRecordsModel.notifyListeners();
   }
 
   @override
@@ -51,29 +73,15 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
       content: Wrap(
         alignment: WrapAlignment.center,
         children: [
-          CustomPicker(
-            options: ["Blood Pressure", "Blood Oxygen Level", "Respiratory Rate", "Heart Beat Rate"],
-            onIndexChanged: onIndexChanged,
+          Consumer<PatientRecordModel>(
+            builder: (context, patientRecordModel, child) {
+              return  Text(
+                patientRecordModel.patientTest.category,
+                style: Styles.headlineStyle4,
+              );
+            }
           ),
-          Container(
-            width: 200,
-            height: 32,
-            margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
-            child: const TextField(
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                  width: 1,
-                )),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                  width: 1,
-                )),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-            ),
-          ),
+          _getInputFields(context),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Container(
@@ -83,7 +91,10 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await updateTest();
+                    Navigator.pop(context);
+                  },
                   child: const Text('Submit'),
                   style: ElevatedButton.styleFrom(backgroundColor: Styles.primaryGreenColor),
                 ),
@@ -93,5 +104,78 @@ class _EditPatientRecordDialogState extends State<EditPatientRecordDialog> {
         ],
       ),
     );
+  }
+
+  Widget _getInputFields(BuildContext context) {
+    final patientRecordModel = Provider.of<PatientRecordModel>(context, listen: false);
+    if (patientRecordModel.patientTest.category != "BLOOD_PRESSURE") {
+      return Container(
+        width: 200,
+        height: 32,
+        margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+        child: TextField(
+          controller: reading1Controller,
+          decoration: const InputDecoration(
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 1,
+                )),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 1,
+                )),
+            filled: true,
+            fillColor: Colors.white,
+          ),
+        ),
+      );
+    }
+    else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 90,
+            height: 32,
+            margin: const EdgeInsets.fromLTRB(0.0, 16.0, 20.0, 0.0),
+            child:TextField(
+              controller: reading1Controller,
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1,
+                    )),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1,
+                    )),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+          ),
+          Container(
+            width: 90,
+            height: 32,
+            margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+            child:TextField(
+              controller: reading2Controller,
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1,
+                    )),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1,
+                    )),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
   }
 }

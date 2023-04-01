@@ -4,9 +4,9 @@ class PatientTest {
   final String id;
   final String patientId;
   final String nurseName;
-  final DateTime modifyDate;
+  DateTime modifyDate;
   final String category;
-  final String readings;
+  String readings;
   final bool isValid;
 
   PatientTest({

@@ -32,12 +32,12 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
   void initState() {
     super.initState();
     WidgetsBinding
-    .instance
-    .addPostFrameCallback((_) {
-      Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
-      final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
-      patientDetailModel.init(patient, true);
-    });
+      .instance
+      .addPostFrameCallback((_) {
+        Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
+        final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+        patientDetailModel.init(patient, true);
+      });
   }
 
   @override
