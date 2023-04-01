@@ -202,28 +202,28 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                                   child: Text(
-                                    'Blood Pressure: ${patientDetailModel.patientRecord.diastolic}/ ${patientDetailModel.patientRecord.systolic}',
+                                    'Blood Pressure: ${patientDetailModel.latestBloodPressure}',
                                     style: Styles.headlineStyle4,
                                   ),
                                 ),
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                                   child: Text(
-                                    'Blood Oxygen Level: ${patientDetailModel.patientRecord.bloodOxygenLevel}',
+                                    'Blood Oxygen Level: ${patientDetailModel.latestBloodOxygenLevel}',
                                     style: Styles.headlineStyle4,
                                   ),
                                 ),
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                                   child: Text(
-                                    'Respiratory Rate: ${patientDetailModel.patientRecord.respiratoryRate}',
+                                    'Respiratory Rate: ${patientDetailModel.latestRespiratoryRate}',
                                     style: Styles.headlineStyle4,
                                   ),
                                 ),
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                                   child: Text(
-                                    'Heart Beat Rate: ${patientDetailModel.patientRecord.heartBeatRate}',
+                                    'Heart Beat Rate: ${patientDetailModel.latestHeartbeatRate}',
                                     style: Styles.headlineStyle4,
                                   ),
                                 ),

@@ -21,10 +21,10 @@ class AddPatientRecordDialog extends StatefulWidget {
 
 class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
   final categories = ["Blood Pressure", "Blood Oxygen Level", "Respiratory Rate", "Heart Beat Rate"];
-  final int idxBloodPressure = 0;
-  final int idxBloodOxygenLevel = 1;
-  final int idxRespiratoryRate = 2;
-  final int idxHeartBeatRate = 3;
+  static const int idxBloodPressure = 0;
+  static const int idxBloodOxygenLevel = 1;
+  static const int idxRespiratoryRate = 2;
+  static const int idxHeartBeatRate = 3;
 
   final _reading1Controller = TextEditingController();
   final _reading2Controller = TextEditingController();
@@ -60,7 +60,7 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
 
     final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
     PatientTest patientTest = PatientTest(
-        id: generateRandom13DigitNumber(),
+        id: "",
         patientId: patientDetailModel.id,
         nurseName: _nurseController.text,
         modifyDate: DateTime.now(),
@@ -68,7 +68,42 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
         readings: reading,
         isValid: true
     );
-    await BaseClient().postTest(patientTest);
+    final createdTest = await BaseClient().postTest(patientTest);
+
+    switch(selectedIndex) {
+      case idxBloodPressure:
+        patientDetailModel.patient!.latestRecord.bloodPressure = createdTest.id;
+        break;
+      case idxBloodOxygenLevel:
+        patientDetailModel.patient!.latestRecord.bloodOxygenLevel = createdTest.id;
+        break;
+      case idxRespiratoryRate:
+        patientDetailModel.patient!.latestRecord.respiratoryRate = createdTest.id;
+        break;
+      case idxHeartBeatRate:
+        patientDetailModel.patient!.latestRecord.heartbeatRate = createdTest.id;
+        break;
+      default:
+        break;
+    }
+    await BaseClient().patchPatient(patientDetailModel.patient!);
+
+    switch(selectedIndex) {
+      case idxBloodPressure:
+        patientDetailModel.latestBloodPressure = patientTest.readings;
+        break;
+      case idxBloodOxygenLevel:
+        patientDetailModel.latestBloodOxygenLevel = patientTest.readings;
+        break;
+      case idxRespiratoryRate:
+        patientDetailModel.latestRespiratoryRate = patientTest.readings;
+        break;
+      case idxHeartBeatRate:
+        patientDetailModel.latestHeartbeatRate = patientTest.readings;
+        break;
+      default:
+        break;
+    }
 
     final patientRecordModel = PatientRecordModel(patientTest);
     final patientRecordsModel = Provider.of<PatientRecordsModel>(context, listen: false);

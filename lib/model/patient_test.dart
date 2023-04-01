@@ -34,13 +34,13 @@ class PatientTest {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    if (id != "") data['id'] = id;
     data['patientId'] = patientId;
     data['nurseName'] = nurseName;
     data['modifyDate'] = modifyDate.toIso8601String();
     data['category'] = category;
     data['readings'] = readings;
-    data['isValid'] = isValid;
+    //data['isValid'] = isValid;
     return data;
   }
 }

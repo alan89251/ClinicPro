@@ -161,26 +161,31 @@ class BaseClient {
     }
   }
 
-  Future<void> postTest(PatientTest patientTest) async {
+  Future<PatientTest> postTest(PatientTest patientTest) async {
     String url = '$baseUrl/patients/${patientTest.patientId}/tests';
     String jsonBody = json.encode(patientTest.toJson());
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonBody,
-      );
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonBody,
+    );
 
-      if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
+      final resBody = json.decode(response.body) as Map<String, dynamic>;
+      if (resBody["success"] == true) {
         print('Test posted successfully.');
+        return PatientTest.fromJson(resBody["data"]);
       } else {
-        print('Error posting test: ${response.statusCode}');
+        print('Error posting patient test:');
+        print('Status: ${resBody["status"]}');
+        print('Message: ${resBody["message"]}');
+        throw Exception('Error posting patient test');
       }
-    } catch (e) {
-      print('Error posting test: $e');
+    } else {
+      throw Exception('Error posting test: ${response.statusCode}');
     }
   }
 }

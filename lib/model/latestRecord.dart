@@ -1,8 +1,8 @@
 class LatestRecord {
-  final String bloodPressure;
-  final String respiratoryRate;
-  final String bloodOxygenLevel;
-  final String heartbeatRate;
+  String bloodPressure;
+  String respiratoryRate;
+  String bloodOxygenLevel;
+  String heartbeatRate;
 
   LatestRecord({
     required this.bloodPressure,
@@ -18,5 +18,14 @@ class LatestRecord {
       bloodOxygenLevel: json['BLOOD_OXYGEN_LEVEL'] ?? "",
       heartbeatRate: json['HEARTBEAT_RATE'] ?? "",
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (bloodPressure != "") data['BLOOD_PRESSURE'] = bloodPressure;
+    if (respiratoryRate != "") data['RESPIRATORY_RATE'] = respiratoryRate;
+    if (bloodOxygenLevel != "") data['BLOOD_OXYGEN_LEVEL'] = bloodOxygenLevel;
+    if (heartbeatRate != "") data['HEARTBEAT_RATE'] = heartbeatRate;
+    return data;
   }
 }

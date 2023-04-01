@@ -1,14 +1,8 @@
 class PatientRecord {
-  String _systolic = "";
-  String get systolic => _systolic;
-  set systolic(String value) {
-    _systolic = value;
-  }
-
-  String _diastolic = "";
-  String get diastolic => _diastolic;
-  set diastolic(String value) {
-    _diastolic = value;
+  String _bloodPressure = "";
+  String get bloodPressure => _bloodPressure;
+  set bloodPressure(String value) {
+    _bloodPressure = value;
   }
 
   String _bloodOxygenLevel = "";
@@ -38,8 +32,6 @@ class PatientRecord {
   PatientRecord.empty();
 
   PatientRecord(
-      this._systolic,
-      this._diastolic,
       this._bloodOxygenLevel,
       this._respiratoryRate,
       this._heartBeatRate,

@@ -100,6 +100,7 @@ class Patient {
     data['medicalNotes'] = medicalNotes;
     data['medicalAllergies'] = medicalAllergies;
     data['disabled'] = disabled;
+    data['latestRecord'] = latestRecord.toJson();
     return data;
   }
 

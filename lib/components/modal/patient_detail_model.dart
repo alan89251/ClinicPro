@@ -50,6 +50,30 @@ class PatientDetailModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  String get latestBloodPressure => patientRecord.bloodPressure;
+  set latestBloodPressure(String value) {
+    patientRecord.bloodPressure = value;
+    notifyListeners();
+  }
+
+  String get latestRespiratoryRate => patientRecord.respiratoryRate;
+  set latestRespiratoryRate(String value) {
+    patientRecord.respiratoryRate = value;
+    notifyListeners();
+  }
+
+  String get latestBloodOxygenLevel => patientRecord.bloodOxygenLevel;
+  set latestBloodOxygenLevel(String value) {
+    patientRecord.bloodOxygenLevel = value;
+    notifyListeners();
+  }
+
+  String get latestHeartbeatRate => patientRecord.heartBeatRate;
+  set latestHeartbeatRate(String value) {
+    patientRecord.heartBeatRate = value;
+    notifyListeners();
+  }
+
   String get address => _patient?.address ?? "";
   set address(String value) {
     _patient!.address = value;
@@ -76,23 +100,50 @@ class PatientDetailModel extends ChangeNotifier {
     _patient = patient;
     if (isLoadLatestTests) {
       if (patient.latestRecord.bloodPressure != "") {
-        String? bloodPressure = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.bloodPressure);
-        _patientRecord.diastolic = bloodPressure!.split(',')[0];
-        _patientRecord.systolic = bloodPressure!.split(',')[1];
+        try {
+          String? bloodPressure = await BaseClient()
+              .fetchPatientTestReadingById(
+              patient.id, patient.latestRecord.bloodPressure);
+          _patientRecord.bloodPressure = bloodPressure!;
+        }
+        catch(e) {
+          print ("Error: $e");
+        }
       }
       if (patient.latestRecord.respiratoryRate != "") {
-        String? respiratoryRate = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.respiratoryRate);
-        _patientRecord.respiratoryRate = respiratoryRate!;
+        try {
+          String? respiratoryRate = await BaseClient()
+              .fetchPatientTestReadingById(
+              patient.id, patient.latestRecord.respiratoryRate);
+          _patientRecord.respiratoryRate = respiratoryRate!;
+        }
+        catch (e) {
+          print ("Error: $e");
+        }
       }
       _patientRecord.bloodOxygenLevel = patient.latestRecord.bloodOxygenLevel;
       if (patient.latestRecord.bloodOxygenLevel != "") {
-        String? bloodOxygenLevel = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.bloodOxygenLevel);
-        _patientRecord.bloodOxygenLevel = bloodOxygenLevel!;
+        try {
+          String? bloodOxygenLevel = await BaseClient()
+              .fetchPatientTestReadingById(
+              patient.id, patient.latestRecord.bloodOxygenLevel);
+          _patientRecord.bloodOxygenLevel = bloodOxygenLevel!;
+        }
+        catch(e) {
+          print ("Error: $e");
+        }
       }
       _patientRecord.heartBeatRate = patient.latestRecord.heartbeatRate;
       if (patient.latestRecord.heartbeatRate != "") {
-        String? heartbeatRate = await BaseClient().fetchPatientTestReadingById(patient.id, patient.latestRecord.heartbeatRate);
-        _patientRecord.heartBeatRate = heartbeatRate!;
+        try {
+          String? heartbeatRate = await BaseClient()
+              .fetchPatientTestReadingById(
+              patient.id, patient.latestRecord.heartbeatRate);
+          _patientRecord.heartBeatRate = heartbeatRate!;
+        }
+        catch(e) {
+          print ("Error: $e");
+        }
       }
     }
     notifyListeners();
