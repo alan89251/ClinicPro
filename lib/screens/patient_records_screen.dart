@@ -1,12 +1,14 @@
 import 'package:clinic_pro/components/add_patient_record_dialog.dart';
 import 'package:clinic_pro/components/modal/patient_detail_model.dart';
+import 'package:clinic_pro/model/patient.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../components/edit_patient_record_dialog.dart';
 import '../components/gret_divider.dart';
-import '../components/modal/patient_record.dart';
 import '../components/modal/patient_records_model.dart';
+import '../model/patient_test.dart';
 import '../utils/app_styles.dart';
 
 class PatientRecordsScreen extends StatefulWidget {
@@ -20,6 +22,20 @@ class _PatientRecordsScreenState extends State<PatientRecordsScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding
+    .instance
+    .addPostFrameCallback((_) {
+      Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
+      final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+      patientDetailModel.init(patient, false);
+      final patientRecordsModel = Provider.of<PatientRecordsModel>(context, listen: false);
+      patientRecordsModel.init(patient.id);
+    });
   }
 
   @override
@@ -106,13 +122,12 @@ class _PatientRecordsScreenState extends State<PatientRecordsScreen> {
                           ),
                           Container(
                             margin: const EdgeInsets.fromLTRB(24.0, 0.0, 0.0, 0.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(24.0),
-                              child: Image.asset(
-                                'assets/dummyAssets/dummyIcon.png',
-                                height: 96,
-                                width: 96,
-                              ),
+                            height: 96,
+                            width: 96,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+                              image: patientDetailModel.getImageWidget(),
                             ),
                           )
                         ],
@@ -123,12 +138,12 @@ class _PatientRecordsScreenState extends State<PatientRecordsScreen> {
                     child: Container(
                       margin: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
                       child: Consumer<PatientRecordsModel>(
-                        builder: (context, patientDetailModel, child) {
+                        builder: (context, patientRecordsModel, child) {
                           return ListView(
-                            children: patientDetailModel
-                                .patientRecords
+                            children: patientRecordsModel
+                                .patientTests
                                 .map(
-                                    (record) => _PatientRecordsListTile(context, record)
+                                    (test) => _PatientRecordsListTile(context, test)
                             ).toList(),
                           );
                         }
@@ -145,7 +160,7 @@ class _PatientRecordsScreenState extends State<PatientRecordsScreen> {
   }
 }
 
-ClipRRect _PatientRecordsListTile(BuildContext context, PatientRecord record) {
+ClipRRect _PatientRecordsListTile(BuildContext context, PatientTest test) {
   return ClipRRect(
     borderRadius: BorderRadius.circular(30),
     child: Container(
@@ -163,35 +178,28 @@ ClipRRect _PatientRecordsListTile(BuildContext context, PatientRecord record) {
                 Container(
                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                   child: Text(
-                    'Blood Pressure: ${record.systolic}/ ${record.diastolic}',
+                    'Category: ${test.category}',
                     style: Styles.headlineStyle4,
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                   child: Text(
-                    'Blood Oxygen Level: ${record.bloodOxygenLevel}',
+                    'Reading: ${test.readings}',
                     style: Styles.headlineStyle4,
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                   child: Text(
-                    'Respiratory Rate: ${record.respiratoryRate}',
+                    'Nurse: ${test.nurseName}',
                     style: Styles.headlineStyle4,
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                   child: Text(
-                    'Heart Beat Rate: ${record.heartBeatRate}',
-                    style: Styles.headlineStyle4,
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
-                  child: Text(
-                    'Last updated time: ${record.clinicalDataLastUpdatedTime}',
+                    'Last updated time: ${DateFormat("dd/MM/yyyy', 'hh:mm:ss a").format(test.modifyDate)}',
                     style: Styles.headlineStyle4,
                   ),
                 ),

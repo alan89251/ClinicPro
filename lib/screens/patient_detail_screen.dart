@@ -29,10 +29,15 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
-    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
-    patientDetailModel.init(patient);
+  void initState() {
+    super.initState();
+    WidgetsBinding
+    .instance
+    .addPostFrameCallback((_) {
+      Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
+      final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+      patientDetailModel.init(patient, true);
+    });
   }
 
   @override
@@ -197,7 +202,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                 Container(
                                   margin: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
                                   child: Text(
-                                    'Blood Pressure: ${patientDetailModel.patientRecord.systolic}/ ${patientDetailModel.patientRecord.diastolic}',
+                                    'Blood Pressure: ${patientDetailModel.patientRecord.diastolic}/ ${patientDetailModel.patientRecord.systolic}',
                                     style: Styles.headlineStyle4,
                                   ),
                                 ),
@@ -229,7 +234,10 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                               width: 40,
                               child: IconButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/patientRecords');
+                                  Navigator.pushNamed(context,
+                                    '/patientRecords',
+                                    arguments: patientDetailModel.patient!,
+                                  );
                                 },
                                 icon: Image.asset('assets/icons/list-alt.png'),
                               ),

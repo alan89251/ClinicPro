@@ -117,4 +117,16 @@ class BaseClient {
       throw Exception('Failed to load patient test');
     }
   }
+
+  Future<List<PatientTest>> fetchTestsByPatientId(String patientId) async {
+    final response = await http.get(Uri.parse('$baseUrl/patients/$patientId/tests'));
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final data = jsonResponse['data'] as List<dynamic>;
+      final tests = data.map((testJson) => PatientTest.fromJson(testJson)).toList();
+      return tests;
+    } else {
+      throw Exception('Failed to load patient tests');
+    }
+  }
 }
