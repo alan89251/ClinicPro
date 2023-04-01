@@ -1,6 +1,7 @@
 import 'package:clinic_pro/components/edit_contact_info_dialog.dart';
 import 'package:clinic_pro/components/edit_medical_note_dialog.dart';
 import 'package:clinic_pro/components/edit_personal_info_dialog.dart';
+import 'package:clinic_pro/service/base_client.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +18,11 @@ class PatientDetailScreen extends StatefulWidget {
 }
 
 class _PatientDetailScreenState extends State<PatientDetailScreen> {
+  void updatePatient() async {
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    BaseClient().patchPatient(patientDetailModel.patient!);
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -93,7 +99,10 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                       showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return EditPersonalInfoDialog();
+                                            return ListenableProvider(
+                                              create: (context) => patientDetailModel,
+                                              child: const EditPersonalInfoDialog(),
+                                            );
                                           }
                                       );
                                     },
@@ -155,7 +164,10 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return EditMedicalNoteDialog();
+                                        return ListenableProvider(
+                                          create: (context) => patientDetailModel,
+                                          child: const EditMedicalNoteDialog(),
+                                        );
                                       }
                                   );
                                 },
@@ -278,7 +290,10 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return EditContactInfoDialog();
+                                        return ListenableProvider(
+                                          create: (context) => patientDetailModel,
+                                          child: const EditContactInfoDialog(),
+                                        );
                                       }
                                   );
                                 },
@@ -300,6 +315,7 @@ class _PatientDetailScreenState extends State<PatientDetailScreen> {
                         borderRadius: BorderRadius.circular(10),
                         child: ElevatedButton(
                           onPressed: () {
+                            updatePatient();
                             Navigator.pop(context);
                           },
                           child: const Text('Save & Back'),

@@ -3,26 +3,26 @@ import 'dart:ffi';
 import 'package:clinic_pro/model/latestRecord.dart';
 
 class Patient {
-  final String id;
-  final int idCardNumber;
-  final String firstName;
-  final String lastName;
-  final String gender;
-  final String bedNumber;
-  final DateTime dateOfBirth;
-  final double height;
-  final double weight;
-  final String photoUrl;
-  final int phoneNumber;
-  final String email;
-  final String address;
-  final String postalCode;
-  final String doctor;
-  final String emergencyContact;
-  final String medicalNotes;
-  final bool medicalAllergies;
-  final bool disabled;
-  final LatestRecord latestRecord;
+  String id;
+  int idCardNumber;
+  String firstName;
+  String lastName;
+  String gender;
+  String bedNumber;
+  DateTime dateOfBirth;
+  double height;
+  double weight;
+  String photoUrl;
+  int phoneNumber;
+  String email;
+  String address;
+  String postalCode;
+  String doctor;
+  String emergencyContact;
+  String medicalNotes;
+  bool medicalAllergies;
+  bool disabled;
+  LatestRecord latestRecord;
 
   Patient({
     required this.id,

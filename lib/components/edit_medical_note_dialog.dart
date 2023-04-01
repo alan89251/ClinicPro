@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/app_styles.dart';
+import 'modal/patient_detail_model.dart';
 
 class EditMedicalNoteDialog extends StatefulWidget {
   const EditMedicalNoteDialog({super.key});
@@ -11,9 +13,20 @@ class EditMedicalNoteDialog extends StatefulWidget {
 }
 
 class _EditMedicalNoteDialogState extends State<EditMedicalNoteDialog> {
+  final _healthIssuesController = TextEditingController();
+
   @override
   void dispose() {
+    _healthIssuesController.dispose();
     super.dispose();
+  }
+
+  void updateMedicalNote() {
+    if (_healthIssuesController.text.isEmpty) {
+      return;
+    }
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    patientDetailModel.healthIssues = _healthIssuesController.text;
   }
 
   @override
@@ -51,63 +64,12 @@ class _EditMedicalNoteDialogState extends State<EditMedicalNoteDialog> {
                 style: Styles.headlineStyle4,
               ),
               const Gap(8),
-              const SizedBox(
+              SizedBox(
                 width: 200,
                 height: 32,
                 child: TextField(
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                        )
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                ),
-              ),
-              const Gap(16),
-              Text(
-                'Medications',
-                style: Styles.headlineStyle4,
-              ),
-              const Gap(8),
-              const SizedBox(
-                width: 200,
-                height: 32,
-                child: TextField(
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                        )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                        )
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                ),
-              ),
-              const Gap(16),
-              Text(
-                'Precaution',
-                style: Styles.headlineStyle4,
-              ),
-              const Gap(8),
-              const SizedBox(
-                width: 200,
-                height: 32,
-                child: TextField(
-                  decoration: InputDecoration(
+                  controller: _healthIssuesController,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
@@ -133,6 +95,8 @@ class _EditMedicalNoteDialogState extends State<EditMedicalNoteDialog> {
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
                       onPressed: () {
+                        updateMedicalNote();
+                        Navigator.pop(context);
                       },
                       child: const Text('Submit'),
                       style: ElevatedButton.styleFrom(

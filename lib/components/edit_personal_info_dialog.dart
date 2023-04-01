@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/app_styles.dart';
+import 'modal/patient_detail_model.dart';
 
 class EditPersonalInfoDialog extends StatefulWidget {
   const EditPersonalInfoDialog({super.key});
@@ -11,9 +13,32 @@ class EditPersonalInfoDialog extends StatefulWidget {
 }
 
 class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _doctorController = TextEditingController();
+
   @override
   void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _doctorController.dispose();
     super.dispose();
+  }
+
+  void updatePersonalInfo() {
+    if (_firstNameController.text.isEmpty) {
+      return;
+    }
+    if (_lastNameController.text.isEmpty) {
+      return;
+    }
+    if (_doctorController.text.isEmpty) {
+      return;
+    }
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    patientDetailModel.firstName = _firstNameController.text;
+    patientDetailModel.lastName = _lastNameController.text;
+    patientDetailModel.doctor = _doctorController.text;
   }
 
   @override
@@ -51,11 +76,12 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                 style: Styles.headlineStyle4,
               ),
               const Gap(8),
-              const SizedBox(
+              SizedBox(
                 width: 200,
                 height: 32,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _firstNameController,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
@@ -77,11 +103,12 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                 style: Styles.headlineStyle4,
               ),
               const Gap(8),
-              const SizedBox(
+              SizedBox(
                 width: 200,
                 height: 32,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
@@ -103,11 +130,12 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                 style: Styles.headlineStyle4,
               ),
               const Gap(8),
-              const SizedBox(
+              SizedBox(
                 width: 200,
                 height: 32,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _doctorController,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
@@ -133,6 +161,8 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
                       onPressed: () {
+                        updatePersonalInfo();
+                        Navigator.pop(context);
                       },
                       child: const Text('Submit'),
                       style: ElevatedButton.styleFrom(

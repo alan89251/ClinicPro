@@ -67,6 +67,38 @@ class BaseClient {
     }
   }
 
+  // Patch request
+  Future<void> patchPatient(Patient patient) async {
+    String url = '$baseUrl/patients';
+    String jsonBody = json.encode(patient.toJson());
+
+    try {
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody,
+      );
+
+      if (response.statusCode == 200) {
+        final resBody = json.decode(response.body) as Map<String, dynamic>;
+        if (resBody["success"] == true) {
+          print('Patient updated successfully.');
+        }
+        else {
+          print('Error updating patient:');
+          print('Status: ${resBody["status"]}');
+          print('Message: ${resBody["message"]}');
+        }
+      } else {
+        print('Error updating patient: ${response.statusCode}');
+      }
+
+    } catch (e) {
+      print('Error updating patient: $e');
+    }
+  }
 
   Future<String?> fetchPatientTestReadingById(String patientId ,String testId) async {
     final response = await http.get(Uri.parse('$baseUrl/patients/$patientId/tests/$testId'));

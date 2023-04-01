@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/app_styles.dart';
+import 'modal/patient_detail_model.dart';
 
 class EditContactInfoDialog extends StatefulWidget {
   const EditContactInfoDialog({super.key});
@@ -11,9 +13,32 @@ class EditContactInfoDialog extends StatefulWidget {
 }
 
 class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
+  final _addressController = TextEditingController();
+  final _postalCodeController = TextEditingController();
+  final _phoneController = TextEditingController();
+
   @override
   void dispose() {
+    _addressController.dispose();
+    _postalCodeController.dispose();
+    _phoneController.dispose();
     super.dispose();
+  }
+
+  void updateContactInfo() {
+    if (_addressController.text.isEmpty) {
+      return;
+    }
+    if (_postalCodeController.text.isEmpty) {
+      return;
+    }
+    if (_phoneController.text.isEmpty) {
+      return;
+    }
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    patientDetailModel.address = _addressController.text;
+    patientDetailModel.postalCode = _postalCodeController.text;
+    patientDetailModel.phone = _phoneController.text;
   }
 
   @override
@@ -51,11 +76,12 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                 style: Styles.headlineStyle4,
               ),
               const Gap(8),
-              const SizedBox(
+              SizedBox(
                 width: 200,
                 height: 32,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _addressController,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
@@ -77,11 +103,12 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                 style: Styles.headlineStyle4,
               ),
               const Gap(8),
-              const SizedBox(
+              SizedBox(
                 width: 200,
                 height: 32,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _postalCodeController,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
@@ -103,11 +130,12 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                 style: Styles.headlineStyle4,
               ),
               const Gap(8),
-              const SizedBox(
+              SizedBox(
                 width: 200,
                 height: 32,
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
@@ -133,6 +161,8 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
                       onPressed: () {
+                        updateContactInfo();
+                        Navigator.pop(context);
                       },
                       child: const Text('Submit'),
                       style: ElevatedButton.styleFrom(
