@@ -16,6 +16,48 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _doctorController = TextEditingController();
+  bool isfirstNameValid = true;
+  bool islastNameValid = true;
+  bool isdoctorValid = true;
+  Color get _firstNameTextFieldBorderColor {
+    return isfirstNameValid ? Colors.grey : Colors.red;
+  }
+  Color get _lastNameTextFieldBorderColor {
+    return islastNameValid ? Colors.grey : Colors.red;
+  }
+  Color get _doctorTextFieldBorderColor {
+    return isdoctorValid ? Colors.grey : Colors.red;
+  }
+
+  // return: update success or not
+  bool updatePersonalInfo() {
+    if (_firstNameController.text.isEmpty) {
+      setState(() { isfirstNameValid = false; });
+      return false;
+    }
+    else {
+      setState(() { isfirstNameValid = true; });
+    }
+    if (_lastNameController.text.isEmpty) {
+      setState(() { islastNameValid = false; });
+      return false;
+    }
+    else {
+      setState(() { islastNameValid = true; });
+    }
+    if (_doctorController.text.isEmpty) {
+      setState(() { isdoctorValid = false; });
+      return false;
+    }
+    else {
+      setState(() { isdoctorValid = true; });
+    }
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    patientDetailModel.firstName = _firstNameController.text;
+    patientDetailModel.lastName = _lastNameController.text;
+    patientDetailModel.doctor = _doctorController.text;
+    return true;
+  }
 
   @override
   void dispose() {
@@ -25,20 +67,17 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
     super.dispose();
   }
 
-  void updatePersonalInfo() {
-    if (_firstNameController.text.isEmpty) {
-      return;
-    }
-    if (_lastNameController.text.isEmpty) {
-      return;
-    }
-    if (_doctorController.text.isEmpty) {
-      return;
-    }
-    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
-    patientDetailModel.firstName = _firstNameController.text;
-    patientDetailModel.lastName = _lastNameController.text;
-    patientDetailModel.doctor = _doctorController.text;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding
+        .instance
+        .addPostFrameCallback((_) {
+          final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+          _firstNameController.text = patientDetailModel.firstName;
+          _lastNameController.text = patientDetailModel.lastName;
+          _doctorController.text = patientDetailModel.doctor;
+        });
   }
 
   @override
@@ -81,15 +120,17 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                 height: 32,
                 child: TextField(
                   controller: _firstNameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _doctorTextFieldBorderColor,
                         )
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _firstNameTextFieldBorderColor,
                         )
                     ),
                     filled: true,
@@ -108,15 +149,17 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                 height: 32,
                 child: TextField(
                   controller: _lastNameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _doctorTextFieldBorderColor,
                         )
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _lastNameTextFieldBorderColor,
                         )
                     ),
                     filled: true,
@@ -135,15 +178,17 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                 height: 32,
                 child: TextField(
                   controller: _doctorController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _doctorTextFieldBorderColor,
                         )
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _doctorTextFieldBorderColor,
                         )
                     ),
                     filled: true,
@@ -161,8 +206,10 @@ class _EditPersonalInfoDialogState extends State<EditPersonalInfoDialog> {
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
                       onPressed: () {
-                        updatePersonalInfo();
-                        Navigator.pop(context);
+                        final isSuccess = updatePersonalInfo();
+                        if (isSuccess) {
+                          Navigator.pop(context);
+                        }
                       },
                       child: const Text('Submit'),
                       style: ElevatedButton.styleFrom(

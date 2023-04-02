@@ -16,6 +16,48 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
   final _addressController = TextEditingController();
   final _postalCodeController = TextEditingController();
   final _phoneController = TextEditingController();
+  bool isAddressValid = true;
+  bool isPostalCodeValid = true;
+  bool isPhoneValid = true;
+  Color get _addressTextFieldBorderColor {
+    return isAddressValid ? Colors.grey : Colors.red;
+  }
+  Color get _postalCodeTextFieldBorderColor {
+    return isPostalCodeValid ? Colors.grey : Colors.red;
+  }
+  Color get _phoneTextFieldBorderColor {
+    return isPhoneValid ? Colors.grey : Colors.red;
+  }
+
+  // return: update success or not
+  bool updateContactInfo() {
+    if (_addressController.text.isEmpty) {
+      setState(() { isAddressValid = false; });
+      return false;
+    }
+    else {
+      setState(() { isAddressValid = true; });
+    }
+    if (_postalCodeController.text.isEmpty) {
+      setState(() { isPostalCodeValid = false; });
+      return false;
+    }
+    else {
+      setState(() { isPostalCodeValid = true; });
+    }
+    if (_phoneController.text.isEmpty) {
+      setState(() { isPhoneValid = false; });
+      return false;
+    }
+    else {
+      setState(() { isPhoneValid = true; });
+    }
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    patientDetailModel.address = _addressController.text;
+    patientDetailModel.postalCode = _postalCodeController.text;
+    patientDetailModel.phone = _phoneController.text;
+    return true;
+  }
 
   @override
   void dispose() {
@@ -25,20 +67,17 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
     super.dispose();
   }
 
-  void updateContactInfo() {
-    if (_addressController.text.isEmpty) {
-      return;
-    }
-    if (_postalCodeController.text.isEmpty) {
-      return;
-    }
-    if (_phoneController.text.isEmpty) {
-      return;
-    }
-    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
-    patientDetailModel.address = _addressController.text;
-    patientDetailModel.postalCode = _postalCodeController.text;
-    patientDetailModel.phone = _phoneController.text;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding
+        .instance
+        .addPostFrameCallback((_) {
+          final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+          _addressController.text = patientDetailModel.address;
+          _postalCodeController.text = patientDetailModel.postalCode;
+          _phoneController.text = patientDetailModel.phone;
+        });
   }
 
   @override
@@ -81,15 +120,17 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                 height: 32,
                 child: TextField(
                   controller: _addressController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _addressTextFieldBorderColor,
                         )
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _addressTextFieldBorderColor,
                         )
                     ),
                     filled: true,
@@ -108,15 +149,17 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                 height: 32,
                 child: TextField(
                   controller: _postalCodeController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _postalCodeTextFieldBorderColor,
                         )
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _postalCodeTextFieldBorderColor,
                         )
                     ),
                     filled: true,
@@ -135,15 +178,17 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                 height: 32,
                 child: TextField(
                   controller: _phoneController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _phoneTextFieldBorderColor,
                         )
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _phoneTextFieldBorderColor,
                         )
                     ),
                     filled: true,
@@ -161,8 +206,10 @@ class _EditContactInfoDialogState extends State<EditContactInfoDialog> {
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
                       onPressed: () {
-                        updateContactInfo();
-                        Navigator.pop(context);
+                        final isSuccess = updateContactInfo();
+                        if (isSuccess) {
+                          Navigator.pop(context);
+                        }
                       },
                       child: const Text('Submit'),
                       style: ElevatedButton.styleFrom(

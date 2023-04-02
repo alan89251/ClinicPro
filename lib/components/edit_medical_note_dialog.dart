@@ -14,6 +14,24 @@ class EditMedicalNoteDialog extends StatefulWidget {
 
 class _EditMedicalNoteDialogState extends State<EditMedicalNoteDialog> {
   final _healthIssuesController = TextEditingController();
+  bool ishealthIssuesValid = true;
+  Color get _healthIssuesTextFieldBorderColor {
+    return ishealthIssuesValid ? Colors.grey : Colors.red;
+  }
+
+  // return: update success or not
+  bool updateMedicalNote() {
+    if (_healthIssuesController.text.isEmpty) {
+      setState(() { ishealthIssuesValid = false; });
+      return false;
+    }
+    else {
+      setState(() { ishealthIssuesValid = true; });
+    }
+    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+    patientDetailModel.healthIssues = _healthIssuesController.text;
+    return true;
+  }
 
   @override
   void dispose() {
@@ -21,12 +39,15 @@ class _EditMedicalNoteDialogState extends State<EditMedicalNoteDialog> {
     super.dispose();
   }
 
-  void updateMedicalNote() {
-    if (_healthIssuesController.text.isEmpty) {
-      return;
-    }
-    final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
-    patientDetailModel.healthIssues = _healthIssuesController.text;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding
+        .instance
+        .addPostFrameCallback((_) {
+          final patientDetailModel = Provider.of<PatientDetailModel>(context, listen: false);
+          _healthIssuesController.text = patientDetailModel.healthIssues;
+        });
   }
 
   @override
@@ -69,15 +90,17 @@ class _EditMedicalNoteDialogState extends State<EditMedicalNoteDialog> {
                 height: 32,
                 child: TextField(
                   controller: _healthIssuesController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _healthIssuesTextFieldBorderColor,
                         )
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
+                          color: _healthIssuesTextFieldBorderColor,
                         )
                     ),
                     filled: true,
@@ -95,8 +118,10 @@ class _EditMedicalNoteDialogState extends State<EditMedicalNoteDialog> {
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
                       onPressed: () {
-                        updateMedicalNote();
-                        Navigator.pop(context);
+                        final isSuccess = updateMedicalNote();
+                        if (isSuccess) {
+                          Navigator.pop(context);
+                        }
                       },
                       child: const Text('Submit'),
                       style: ElevatedButton.styleFrom(

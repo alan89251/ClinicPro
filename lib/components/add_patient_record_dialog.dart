@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:clinic_pro/components/modal/patient_detail_model.dart';
 import 'package:clinic_pro/components/modal/patient_record_model.dart';
 import 'package:clinic_pro/components/modal/patient_records_model.dart';
@@ -20,7 +18,7 @@ class AddPatientRecordDialog extends StatefulWidget {
 }
 
 class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
-  final categories = ["Blood Pressure", "Blood Oxygen Level", "Respiratory Rate", "Heart Beat Rate"];
+  final categories = ["BLOOD_PRESSURE", "BLOOD_OXYGEN_LEVEL", "RESPIRATORY_RATE", "HEARTBEAT_RATE"];
   static const int idxBloodPressure = 0;
   static const int idxBloodOxygenLevel = 1;
   static const int idxRespiratoryRate = 2;
@@ -29,25 +27,45 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
   final _reading1Controller = TextEditingController();
   final _reading2Controller = TextEditingController();
   final _nurseController = TextEditingController();
-
-  String generateRandom13DigitNumber() {
-    Random random = Random();
-    String digits = '';
-    for (int i = 0; i < 13; i++) {
-      digits += random.nextInt(10).toString();
-    }
-    return digits;
+  bool isReading1Valid = true;
+  bool isReading2Valid = true;
+  bool isNurseValid = true;
+  Color get _reading1TextFieldBorderColor {
+    return isReading1Valid ? Colors.grey : Colors.red;
+  }
+  Color get _reading2TextFieldBorderColor {
+    return isReading2Valid ? Colors.grey : Colors.red;
+  }
+  Color get _nurseTextFieldBorderColor {
+    return isNurseValid ? Colors.grey : Colors.red;
   }
 
-  Future<void> addPatientRecord() async {
-    if (_reading1Controller.text.isEmpty) {
-      return;
+  // return: update success or not
+  Future<bool> addPatientRecord() async {
+    if (_reading1Controller.text.isEmpty
+      || double.tryParse(_reading1Controller.text) == null) {
+      setState(() { isReading1Valid = false; });
+      return false;
     }
-    if (selectedIndex == idxBloodPressure && _reading2Controller.text.isEmpty) {
-      return;
+    else {
+      setState(() { isReading1Valid = true; });
+    }
+    if (selectedIndex == idxBloodPressure) {
+      if (_reading2Controller.text.isEmpty
+        || double.tryParse(_reading2Controller.text) == null) {
+        setState(() { isReading2Valid = false; });
+        return false;
+      }
+      else {
+        setState(() { isReading2Valid = true; });
+      }
     }
     if (_nurseController.text.isEmpty) {
-      return;
+      setState(() { isNurseValid = false; });
+      return false;
+    }
+    else {
+      setState(() { isNurseValid = true; });
     }
 
     String reading = "";
@@ -109,6 +127,8 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
     final patientRecordsModel = Provider.of<PatientRecordsModel>(context, listen: false);
     patientRecordsModel.patientTests.add(patientRecordModel);
     patientRecordsModel.notifyListeners();
+
+    return true;
   }
 
   @override
@@ -177,14 +197,16 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
                       margin: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
                       child: TextField(
                         controller: _nurseController,
-                        decoration: const InputDecoration(
+                        decoration:  InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 1,
+                                color: _nurseTextFieldBorderColor,
                               )),
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 1,
+                                color: _nurseTextFieldBorderColor,
                               )),
                           filled: true,
                           fillColor: Colors.white,
@@ -204,8 +226,10 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
                     borderRadius: BorderRadius.circular(10),
                     child: ElevatedButton(
                       onPressed: () async {
-                        await addPatientRecord();
-                        Navigator.pop(context);
+                        bool isSuccess = await addPatientRecord();
+                        if (isSuccess) {
+                          Navigator.pop(context);
+                        }
                       },
                       child: const Text('Submit'),
                       style: ElevatedButton.styleFrom(backgroundColor: Styles.primaryGreenColor),
@@ -236,14 +260,16 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
           margin: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: TextField(
             controller: _reading1Controller,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1,
+                    color: _reading1TextFieldBorderColor,
                   )),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1,
+                    color: _reading1TextFieldBorderColor,
                   )),
               filled: true,
               fillColor: Colors.white,
@@ -258,14 +284,16 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
           margin: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
           child: TextField(
             controller: _reading2Controller,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1,
+                    color: _reading2TextFieldBorderColor,
                   )),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1,
+                    color: _reading2TextFieldBorderColor,
                   )),
               filled: true,
               fillColor: Colors.white,
@@ -282,14 +310,16 @@ class _AddPatientRecordDialogState extends State<AddPatientRecordDialog> {
             margin: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
             child: TextField(
               controller: _reading1Controller,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       width: 1,
+                      color: _reading1TextFieldBorderColor,
                     )),
                 focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       width: 1,
+                      color: _reading1TextFieldBorderColor,
                     )),
                 filled: true,
                 fillColor: Colors.white,
