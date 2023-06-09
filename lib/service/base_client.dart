@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 
 import '../model/patient_test.dart';
 
-//const String baseUrl = "https://gp5.onrender.com";
  const String baseUrl = "http://10.0.2.2:9001";
 
 class BaseClient {
